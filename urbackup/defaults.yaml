@@ -2,6 +2,7 @@
 # vim: ft=yaml
 urbackup:
   pkg: urbackup-server
+  settings_db: /var/urbackup/backup_server_settings.db
   config:
     backuppath: /home/urbackup-data
     fastcgi_port: 55413
