@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 # vim: ft=sls
 
-{% from "template/map.jinja" import template with context %}
+{% from "urbackup/map.jinja" import urbackup with context %}
 
-template-name:
+include:
+  - urbackup.install
+
+urbackup-service:
   service.running:
-    - name: {{ template.service.name }}
+    - name: {{ urbackup.service }}
     - enable: True
+    - onlyif: dpkg-query -W {{ urbackup.pkg }}

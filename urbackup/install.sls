@@ -3,12 +3,6 @@
 
 {% from "urbackup/map.jinja" import urbackup with context %}
 
-urbackup_debconf:
-  debconf.set:
-    - name: {{ urbackup.pkg }}
-    - data:
-        'urbackup/backuppath': {'type': 'string', 'value': {{ urbackup.backuppath }}}
-
 urbackup_dependencies:
   pkg.installed:
     - pkgs:
@@ -28,4 +22,3 @@ urbackup_install:
     - require:
       - file: urbackup_source
       - pkg: urbackup_dependencies
-      - debconf: urbackup_debconf

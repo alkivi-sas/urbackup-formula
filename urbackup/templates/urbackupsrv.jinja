@@ -1,0 +1,41 @@
+{% from "urbackup/map.jinja" import urbackup with context -%}
+
+# Defaults for urbackupsrv initscript
+# sourced by /etc/init.d/urbackupsrv and /lib/systemd/system/urbackup-server.service
+# installed at /etc/default/urbackupsrv by the maintainer scripts
+
+#
+# This is parsed as a key=value file
+#
+
+#Port for FastCGI requests
+FASTCGI_PORT={{ urbackup.config.fastcgi_port }}
+
+#Enable internal HTTP server
+HTTP_SERVER="{{ urbackup.config.http_server }}"
+
+#Port for the web interface
+#(if internal HTTP server is enabled)
+HTTP_PORT={{ urbackup.config.http_port }}
+
+#log file name
+LOGFILE="{{ urbackup.config.logfile }}"
+
+#Either debug,warn,info or error
+LOGLEVEL="{{ urbackup.config.loglevel }}"
+
+#Temporary file directory
+# -- this may get very large depending on the advanced settings
+DAEMON_TMPDIR="{{ urbackup.config.daemon_tmpdir }}"
+
+#Tmp file directory for sqlite temporary tables.
+#You might want to put the databases on another filesystem than the other temporary files.
+#Default is the same as DAEMON_TMPDIR
+SQLITE_TMPDIR="{{ urbackup.config.sqllite_tmpdir }}"
+
+#Interfaces from which to send broadcasts. (Default: all).
+#Comma separated -- e.g. "eth0,eth1"
+BROADCAST_INTERFACES="{{ urbackup.config.broadcast_interfaces }}"
+
+#User the urbackupsrv process runs as
+USER="{{ urbackup.config.user }}"

@@ -2,6 +2,19 @@
 # vim: ft=yaml
 urbackup:
   pkg: urbackup-server
-  backuppath: '/home/urbackup-data'
-  service:
-    name: urbackup-server
+  config:
+    backuppath: /home/urbackup-data
+    fastcgi_port: 55413
+    http_server: 'true'
+    http_port: 55414
+    logfile: /var/log/urbackup.log
+    loglevel: warn
+    daemon_tmpdir: /tmp
+    sqllite_tmpdir: ''
+    broadcast_interfaces: ''
+    user: urbackup
+    group: urbackup
+
+  defaults: /etc/default/urbackupsrv
+  config_backuppath: /etc/urbackup/backupfolder
+  service: urbackupsrv
