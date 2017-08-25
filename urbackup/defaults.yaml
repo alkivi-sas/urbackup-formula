@@ -1,0 +1,7 @@
+# -*- coding: utf-8 -*-
+# vim: ft=yaml
+urbackup:
+  pkg: urbackup-server
+  backuppath: '/home/urbackup-data'
+  service:
+    name: urbackup-server
