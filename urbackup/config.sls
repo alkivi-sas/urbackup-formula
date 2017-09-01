@@ -29,11 +29,21 @@ urbackup-config:
     - watch_in:
       - service: urbackup-service
 
-urlbackup-backuppath:
+urbackup-backuppath:
   file.directory:
     - name: {{ urbackup.config.backuppath }}
     - user: {{ urbackup.config.user }}
     - group: {{ urbackup.config.group }}
-    - mode: 755
+    - mode: 750
     - watch_in:
       - service: urbackup-service
+  urbackup_setting.present:
+    - name: backupfolder
+    - value: {{ urbackup.config.backuppath }}
+
+{% for setting, value in urbackup.get('settings', {}).items() %}
+urbackup-setting-{{ setting }}:
+  urbackup_setting.present:
+    - name: {{ setting }}
+    - value: {{ value }}
+{% endfor %}

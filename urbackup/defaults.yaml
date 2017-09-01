@@ -19,3 +19,4 @@ urbackup:
   defaults: /etc/default/urbackupsrv
   config_backuppath: /etc/urbackup/backupfolder
   service: urbackupsrv
+  settings: {}
