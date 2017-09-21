@@ -665,6 +665,18 @@ def get_group_settings(groupname):
     return client.get_group_settings(groupname)
 
 
+def get_group_setting(groupname, key):
+    """Return a specific global setting."""
+    client = Client()
+    settings = client.get_group_settings(groupname)
+    if not settings:
+        return None
+    elif key not in settings:
+        return None
+    else:
+        return settings[key]
+
+
 def set_group_setting(groupname, key, value):
     """Update a group settings."""
     client = Client()

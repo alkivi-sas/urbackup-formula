@@ -47,3 +47,21 @@ urbackup-setting-{{ setting }}:
     - name: {{ setting }}
     - value: {{ value }}
 {% endfor %}
+
+{% for group, groupconf in urbackup.get('groups', {}).items() %}
+urbackup-group-{{ group }}:
+  urbackup_group.present:
+    - name: {{ group }}
+
+{% for setting, value in groupconf.items() %}
+urbackup-group-{{ group }}-{{ setting }}:
+  urbackup_group_setting.present:
+    - name: {{ setting }}
+    - groupname: {{ group }}
+    - value: {{ value }}
+    - require:
+      - urbackup_group: urbackup-group-{{ group }}
+{% endfor %}
+
+
+{% endfor %}
