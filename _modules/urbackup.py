@@ -699,3 +699,12 @@ def set_client_setting(clientname, key, value):
     """Update a client settings."""
     client = Client()
     return client.set_client_setting(clientname, key, value)
+
+def set_client_group(clientname, groupname):
+    """Set a client to a group."""
+    client = Client()
+    group = client.get_group(groupname)
+    if not group:
+        return None
+    groupid = group['id']
+    return client.set_client_setting(clientname, 'memberof', groupid)
