@@ -240,6 +240,7 @@ class Client():
             return None
         
         return ret
+
     
     def get_global_settings(self):
         if not self.login():
@@ -251,7 +252,7 @@ class Client():
             return None
         
         return settings['settings']
-    
+
     def set_global_setting(self, key, new_value):
         if not self.login():
             return False
@@ -268,6 +269,109 @@ class Client():
         
         return ret!=None and 'saved_ok' in ret
     
+    def get_groups(self):
+        if not self.login():
+            return None
+        
+        settings = self._get_json('settings')
+        if not settings or \
+                'navitems' not in settings or \
+                'groups' not in settings['navitems']:
+            return []
+
+        return settings['navitems']['groups']
+
+    def get_group(self, groupname):
+        if not self.login():
+            return None
+
+        groups = self.get_groups()
+
+        for group in groups:
+            if group['name'] == groupname:
+                return group
+        return None
+
+    def add_group(self, groupname):
+        
+	if not self.login():
+	    return None
+
+	ret = self._get_json('settings', { 'sa': 'groupadd', 'name': groupname})
+
+	if ret==None or 'already_exists' in ret:
+	    return None
+
+        if not 'added_group' in ret:
+            return None
+        
+        return ret['added_group']
+
+    def del_group(self, groupname):
+        
+	if not self.login():
+	    return None
+
+        group = self.get_group(groupname)
+        if not group:
+            return group
+
+        groupid = group['id']
+
+	ret = self._get_json('settings', { 'sa': 'groupremove', 'id': groupid})
+
+        if 'delete_ok' not in ret:
+            return None
+
+        return ret['delete_ok']
+
+        
+    def get_group_settings(self, groupname):
+        
+        if not self.login():
+            return None
+
+        group = self.get_group(groupname)
+        if not group:
+            return group
+
+        groupid = group['id']
+
+        
+        settings = self._get_json('settings', {'sa': 'clientsettings',
+                                    't_clientid': -int(groupid)})
+        
+        if not settings or not 'settings' in settings:
+            return None
+            
+        return settings['settings']
+
+    def set_group_setting(self, groupname, key, new_value):
+        if not self.login():
+            return False
+        
+        group = self.get_group(groupname)
+        
+        if group == None:
+            return False
+        
+        groupid = group['id'];
+        
+        settings = self._get_json('settings', {'sa': 'clientsettings',
+                                    't_clientid': -int(groupid)})
+        
+        if not settings or not 'settings' in settings:
+            return False
+        
+        settings['settings'][key] = new_value
+        settings['settings']['overwrite'] = 'true'
+        settings['settings']['sa'] = 'clientsettings_save'
+        settings['settings']['t_clientid'] = -int(groupid)
+        
+        ret = self._get_json('settings', settings['settings'])
+        
+        return ret!=None and 'saved_ok' in ret
+
     def get_client_settings(self, clientname):
         
         if not self.login():
@@ -288,7 +392,7 @@ class Client():
             
         return settings['settings']
     
-    def change_client_setting(self, clientname, key, new_value):
+    def set_client_setting(self, clientname, key, new_value):
         if not self.login():
             return False
         
@@ -499,10 +603,18 @@ def get_server_identity():
     client = Client()
     return client.get_server_identity()
 
+
+def get_status():
+    """Return server identity."""
+    client = Client()
+    return client.get_status()
+
+
 def get_global_settings():
     """Return all global settings."""
     client = Client()
     return client.get_global_settings()
+
 
 def get_global_setting(key):
     """Return a specific global setting."""
@@ -515,17 +627,63 @@ def get_global_setting(key):
     else:
         return settings[key]
 
+
 def set_global_setting(key, value):
     """Set a specific global setting."""
     client = Client()
     return client.set_global_setting(key, value)
+
+
+def get_groups():
+    """Return a list with groups."""
+    client = Client()
+    groups = client.get_groups()
+    return groups
+
+
+def get_group(name):
+    """Return a group."""
+    client = Client()
+    return client.get_group(name)
+
+
+def add_group(groupname):
+    """Add a group."""
+    client = Client()
+    return client.add_group(groupname)
+
+
+def del_group(groupname):
+    """Add a group."""
+    client = Client()
+    return client.del_group(groupname)
+
+
+def get_group_settings(groupname):
+    """Return settings for a group."""
+    client = Client()
+    return client.get_group_settings(groupname)
+
+
+def set_group_setting(groupname, key, value):
+    """Update a group settings."""
+    client = Client()
+    return client.set_group_setting(groupname, key, value)
+
 
 def get_client_status(clientname):
     """Return a client settings."""
     client = Client()
     return client.get_client_status(clientname)
 
+
 def get_client_settings(clientname):
     """Return a client settings."""
     client = Client()
     return client.get_client_settings(clientname)
+
+
+def set_client_setting(clientname, key, value):
+    """Update a client settings."""
+    client = Client()
+    return client.set_client_setting(clientname, key, value)

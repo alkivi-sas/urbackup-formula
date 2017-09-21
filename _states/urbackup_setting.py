@@ -44,7 +44,7 @@ def present(
             ret['result'] = False
             ret['comment'] = 'Failed to create setting {0} to {1}.'.format(name, value)
 
-    elif setting != value:
+    elif str(setting) != str(value):
         if __opts__['test']:
             ret['comment'] = 'Setting {0} will be updated to {1}.'.format(name, value)
             ret['result'] = None
