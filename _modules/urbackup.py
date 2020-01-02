@@ -294,13 +294,13 @@ class Client():
 
     def add_group(self, groupname):
         
-	if not self.login():
-	    return None
+        if not self.login():
+            return None
 
-	ret = self._get_json('settings', { 'sa': 'groupadd', 'name': groupname})
+        ret = self._get_json('settings', { 'sa': 'groupadd', 'name': groupname})
 
-	if ret==None or 'already_exists' in ret:
-	    return None
+        if ret==None or 'already_exists' in ret:
+            return None
 
         if not 'added_group' in ret:
             return None
@@ -309,8 +309,8 @@ class Client():
 
     def del_group(self, groupname):
         
-	if not self.login():
-	    return None
+        if not self.login():
+            return None
 
         group = self.get_group(groupname)
         if not group:
@@ -318,7 +318,7 @@ class Client():
 
         groupid = group['id']
 
-	ret = self._get_json('settings', { 'sa': 'groupremove', 'id': groupid})
+        ret = self._get_json('settings', { 'sa': 'groupremove', 'id': groupid})
 
         if 'delete_ok' not in ret:
             return None
